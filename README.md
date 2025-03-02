@@ -1,3 +1,4 @@
 # aas-website-final
-hii
-https://github.com/chinmayakumardas/aas-website-final.git
+
+MONGO_URI=mongodb+srv://chinmayakumardas:Chin%402025@devswift.m3r4q.mongodb.net/aasone
+
