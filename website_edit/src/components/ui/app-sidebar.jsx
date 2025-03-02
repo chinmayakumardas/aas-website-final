@@ -108,6 +108,7 @@ import {
   Sidebar, SidebarContent, SidebarFooter, SidebarHeader,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Cookies from "js-cookie";
 
 const navData = {
   admin: [
@@ -128,7 +129,7 @@ const navData = {
 export function AppSidebar() {
   const dispatch = useDispatch();
   const { userDetails, loading } = useSelector((state) => state.auth);
-  const email = typeof window !== "undefined" ? localStorage.getItem("email") : null;
+  const email = typeof window !== "undefined" ? Cookies.get("email") : null;
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {

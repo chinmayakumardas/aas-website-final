@@ -48,6 +48,7 @@
     "fortawesome": "^0.0.1-security",
     "gsap": "^3.12.7",
     "heroicons": "^2.2.0",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "locomotive-scroll": "^4.1.4",
     "lodash": "^4.17.21",

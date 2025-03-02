@@ -29,9 +29,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import Cookies from "js-cookie";
+
+
 
 import { useRouter } from 'next/navigation';
-
+export const clearAuthCookies = () => {
+  Cookies.remove("token");
+  Cookies.remove("refreshToken");
+  Cookies.remove("email");
+  Cookies.remove("role");
+};
 export function NavUser({
   user
 }) {
@@ -42,7 +50,7 @@ export function NavUser({
 
   // Correct the handleLogout function here
   const handleLogout = () => {
-    localStorage.clear(); 
+    clearAuthCookies();
     router.push('/login'); // Redirect to login page
   };
  

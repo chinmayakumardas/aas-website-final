@@ -7,9 +7,12 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
 import React from "react";
+import Cookies from "js-cookie";
 
 export default function AdminPannelLayout({ children }) {
-  const roles= localStorage.getItem('role')
+  const roles= Cookies.get('role')||'auther'
+  console.log(roles)
+  //const roles= localStorage.getItem('role')
   //const user = { role: 'admin' };
   const user = { role: roles };
   

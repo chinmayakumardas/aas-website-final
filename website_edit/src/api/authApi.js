@@ -1,4 +1,4 @@
-
+import Cookies from "js-cookie";
 import axiosInstance from '@/utils/axiosInstance';
 
 // Register API call
@@ -39,18 +39,67 @@ export const sendOtpApi = async (email) => {
 };
 
 // Verify OTP API call
+// export const verifyOtpApi = async (email, otp) => {
+//   try {
+//     const response = await axiosInstance.post('/verify-otp', { email, otp });
+//     console.log('Verify OTP API Response:', response);
+//     localStorage.setItem('token', response.data.token);
+//     localStorage.setItem('email', response.data.email);
+//     localStorage.setItem('refreshToken', response.data.refreshToken);
+//     localStorage.setItem('role', response.data.role);
+
+    
+//     return { message: response.data.message, token: response.data.token, refreshToken: response.data.refreshToken, role: response.data.role, email: response.data.email };
+//   } catch (error) {
+//     console.error('Verify OTP API Error:', error.message);
+//     throw new Error(error.response ? error.response.data.message : 'Invalid OTP');
+//   }
+// };
+
 export const verifyOtpApi = async (email, otp) => {
   try {
-    const response = await axiosInstance.post('/verify-otp', { email, otp });
-    console.log('Verify OTP API Response:', response);
-    localStorage.setItem('token', response.data.token);
-    localStorage.setItem('email', response.data.email);
-    localStorage.setItem('refreshToken', response.data.refreshToken);
-    localStorage.setItem('role', response.data.role);
-    return { message: response.data.message, token: response.data.token, refreshToken: response.data.refreshToken, role: response.data.role, email: response.data.email };
+    const response = await axiosInstance.post("/verify-otp", { email, otp });
+    console.log("Verify OTP API Response:", response);
+
+    // Store authentication details in cookies
+    Cookies.set("token", response.data.token, {
+      expires: 7, // Token expires in 7 days
+      secure: true, // HTTPS only
+      sameSite: "Strict",
+      path: "/",
+    });
+
+    Cookies.set("refreshToken", response.data.refreshToken, {
+      expires: 30, // Refresh token expires in 30 days
+      secure: true,
+      sameSite: "Strict",
+      path: "/",
+    });
+
+    Cookies.set("email", response.data.email, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+      path: "/",
+    });
+
+    Cookies.set("role", response.data.role, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+      path: "/",
+    });
+
+    return {
+      message: response.data.message,
+      token: response.data.token,
+      refreshToken: response.data.refreshToken,
+      role: response.data.role,
+      email: response.data.email,
+    };
   } catch (error) {
-    console.error('Verify OTP API Error:', error.message);
-    throw new Error(error.response ? error.response.data.message : 'Invalid OTP');
+    console.error("Verify OTP API Error:", error.message);
+    throw new Error(error.response ? error.response.data.message : "Invalid OTP");
   }
 };
 

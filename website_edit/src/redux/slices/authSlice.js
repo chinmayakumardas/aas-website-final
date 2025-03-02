@@ -140,7 +140,7 @@ const authSlice = createSlice({
       state.error = null;
       state.message = null;
      
-      localStorage.clear('');
+      
      
   
     },
