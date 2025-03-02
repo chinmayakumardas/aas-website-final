@@ -1,6 +1,7 @@
 // src/api/AxiosInstance.js
 import axios from 'axios';
- 
+import Cookies from "js-cookie";
+
 const AxiosInstance = axios.create({
   baseURL: "http://localhost:8003/api",  // Use environment variable for base URL
  
@@ -9,7 +10,7 @@ const AxiosInstance = axios.create({
 // Intercept requests if needed (for token or authentication)
 AxiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
