@@ -1,6 +1,7 @@
 
 
 'use client';
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails, editProfile } from '@/redux/slices/authSlice';
@@ -14,7 +15,7 @@ import { toast } from 'react-toastify';
 const EditProfile = () => {
   const dispatch = useDispatch();
   const { userDetails, error } = useSelector((state) => state.auth);
-  const email = localStorage.getItem('email');
+  const email =  Cookies.get('email');
   
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({

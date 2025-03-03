@@ -3,7 +3,8 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 
 const AxiosInstance = axios.create({
-  baseURL: "http://localhost:8003/api",  // Use environment variable for base URL
+  //baseURL: "http://localhost:8003/api",  // Use environment variable for base URL
+  baseURL: "http://192.168.0.101:8003/api",  // Use environment variable for base URL
  
 });
  

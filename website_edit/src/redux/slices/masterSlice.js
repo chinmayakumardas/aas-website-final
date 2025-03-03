@@ -1,47 +1,70 @@
+
+
+
+
+
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchData, createItem, updateItem, deleteItem } from '@/api/masterApi'
+import { fetchDataApi, fetchDataByTypeApi, createItemApi, updateItemApi, deleteItemApi } from '@/api/masterApi';
 
-// Async thunks for fetching, adding, updating, and deleting
-export const getMasterData = createAsyncThunk('master/getMasterData', async (type, { rejectWithValue }) => {
+// Fetch all master data
+export const getMasterData = createAsyncThunk('master/getMasterData', async (_, { rejectWithValue }) => {
   try {
-    return { type, data: await fetchData(type) };
+    const data = await fetchDataApi();
+    return data;
   } catch (error) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data || error.message);
   }
 });
 
-export const addMasterItem = createAsyncThunk('master/addMasterItem', async ({ type, data }, { rejectWithValue }) => {
+// Fetch data by type
+export const fetchDataByType = createAsyncThunk('master/fetchDataByType', async ({ type }, { rejectWithValue }) => {
   try {
-    return { type, item: await createItem(type, data) };
+    const data = await fetchDataByTypeApi(type);
+    return { type, data };
   } catch (error) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data || error.message);
   }
 });
 
-export const editMasterItem = createAsyncThunk('master/editMasterItem', async ({ type, id, data }, { rejectWithValue }) => {
+// Create a new item
+export const addMasterItem = createAsyncThunk('master/addMasterItem', async ({ type, name }, { rejectWithValue }) => {
   try {
-    return { type, item: await updateItem(type, id, data) };
+    const item = await createItemApi(type, name);
+    return { type, item };
   } catch (error) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data || error.message);
   }
 });
 
-export const removeMasterItem = createAsyncThunk('master/removeMasterItem', async ({ type, id }, { rejectWithValue }) => {
+// Update an item
+export const editMasterItem = createAsyncThunk('master/editMasterItem', async ({ type, uniqueId, name }, { rejectWithValue }) => {
   try {
-    await deleteItem(type, id);
-    return { type, id };
+    const item = await updateItemApi(uniqueId, name);
+    return { type, item };
   } catch (error) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data || error.message);
   }
 });
 
-// Slice
+// Remove an item
+export const removeMasterItem = createAsyncThunk('master/removeMasterItem', async ({ type, uniqueId }, { rejectWithValue }) => {
+  try {
+    await deleteItemApi(uniqueId);
+    return { type, uniqueId };
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
+// Redux Slice
 const masterSlice = createSlice({
   name: 'master',
   initialState: {
-    tags: [],
-    serviceCategories: [],
-    blogCategories: [],
+    masterdata: [],
+    tag: [],
+    serviceCategory: [],
+    blogCategory: [],
     loading: false,
     error: null,
   },
@@ -54,23 +77,76 @@ const masterSlice = createSlice({
       })
       .addCase(getMasterData.fulfilled, (state, action) => {
         state.loading = false;
-        state[action.payload.type] = action.payload.data;
+        state.masterdata = action.payload;
       })
       .addCase(getMasterData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(addMasterItem.fulfilled, (state, action) => {
-        state[action.payload.type].push(action.payload.item);
+      .addCase(fetchDataByType.pending, (state) => {
+        state.loading = true;
       })
+      .addCase(fetchDataByType.fulfilled, (state, action) => {
+        state.loading = false;
+        state[action.payload.type] = action.payload.data || [];
+        //state[action.payload.type] = Array.isArray(action.payload.data) ? action.payload.data : [];
+      })
+      .addCase(fetchDataByType.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addMasterItem.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addMasterItem.fulfilled, (state, action) => {
+        state.loading = false;
+        //state[action.payload.type] = [...state[action.payload.type], action.payload.item];
+        state[action.payload.type] = [
+          ...(Array.isArray(state[action.payload.type]) ? state[action.payload.type] : []),
+          action.payload.item,
+        ];
+      })
+      .addCase(addMasterItem.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editMasterItem.pending, (state) => {
+        state.loading = true;
+      })
+
+
       .addCase(editMasterItem.fulfilled, (state, action) => {
-        const index = state[action.payload.type].findIndex((item) => item.id === action.payload.item.id);
+        state.loading = false;
+     
+
+        const items = Array.isArray(state[action.payload.type]) ? state[action.payload.type] : [];
+
+        const index = items.findIndex((item) => item.uniqueId === action.payload.item.uniqueId);
+        
+        
         if (index !== -1) {
           state[action.payload.type][index] = action.payload.item;
         }
       })
+
+
+      .addCase(editMasterItem.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(removeMasterItem.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(removeMasterItem.fulfilled, (state, action) => {
-        state[action.payload.type] = state[action.payload.type].filter((item) => item.id !== action.payload.id);
+        state.loading = false;
+        state[action.payload.type] = (Array.isArray(state[action.payload.type]) ? state[action.payload.type] : []).filter(
+          (item) => item.uniqueId !== action.payload.uniqueId
+        );
+        //state[action.payload.type] = state[action.payload.type].filter((item) => item.uniqueId !== action.payload.uniqueId);
+      })
+      .addCase(removeMasterItem.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

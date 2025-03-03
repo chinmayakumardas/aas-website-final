@@ -1,20 +1,32 @@
 import axiosInstance from '@/utils/axiosInstance';
 
-export const fetchData = async (type) => {
-  const response = await axiosInstance.get(`/${type}`);
+export const fetchDataApi = async () => {
+  const response = await axiosInstance.get(`/masterAll`);
   return response.data;
 };
 
-export const createItem = async (type, data) => {
-  const response = await axiosInstance.post(`/${type}`, data);
+export const fetchDataByTypeApi = async (type) => {
+  const response = await axiosInstance.get(`/masterByType/${type}`);
   return response.data;
 };
 
-export const updateItem = async (type, id, data) => {
-  const response = await axiosInstance.put(`/${type}/${id}`, data);
+export const createItemApi = async (type,name) => {
+  const response = await axiosInstance.post(`/masterCreate`, { type, name });
   return response.data;
 };
 
-export const deleteItem = async (type, id) => {
-  await axiosInstance.delete(`/${type}/${id}`);
+export const updateItemApi = async (uniqueId,  name ) => {
+  const response = await axiosInstance.put(`/masterUpdate/${uniqueId}`, { name });
+  return response.data;
 };
+
+export const deleteItemApi = async (uniqueId) => {
+  await axiosInstance.delete(`/masterDelete/${uniqueId}`);
+};
+
+
+
+
+
+
+
