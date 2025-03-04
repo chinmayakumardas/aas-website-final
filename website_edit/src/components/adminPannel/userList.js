@@ -1,18 +1,21 @@
-
 'use client';
 import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers, registerUser, editProfile } from '@/redux/slices/authSlice'; 
-import { toast } from 'react-toastify'; // Importing toastify
-import { FiEye, FiEyeOff } from 'react-icons/fi'; // Importing eye icons for toggle
+import { toast } from 'react-toastify';
+import { FiEye, FiEyeOff, FiEdit, FiUserPlus, FiMail, FiUserCheck, FiFilter, FiSearch, FiTrash } from 'react-icons/fi';
+import  Spinner  from "@/components/ui/spinner";
 
 const UsersList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -30,7 +33,7 @@ const UsersList = () => {
   const dispatch = useDispatch();
   
   // Fetching users from Redux store
-  const { users,status, loading, error } = useSelector((state) => state.auth);
+  const { users, status, loading, error } = useSelector((state) => state.auth);
 
   // Fetch all users when the component mounts
   useEffect(() => {
@@ -69,7 +72,6 @@ const UsersList = () => {
     setEditIndex(index);
     // Populate form data with existing user data except for fields like password or username
     setFormData({ 
-     
       //username: users[index].username,
       email: users[index].email,
       firstName: users[index].firstName,
@@ -110,49 +112,246 @@ const UsersList = () => {
     setIsDialogOpen(true);
   };
 
-  // Add a check for undefined or null `users`
-  const filteredUsers = (Array.isArray(users) ? users : []).filter(user =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleViewDetails = (user) => {
+    setSelectedUser(user);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleDelete = (user) => {
+    toast.info('Delete function not implemented yet.');
+  };
+
+ 
+
+  // Filter users based on search term and status
+  const filteredUsers = (Array.isArray(users) ? users : []).filter(user => {
+    const matchesSearch = 
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (statusFilter === 'all') return matchesSearch;
+    const isActive = user.status === 'active' || !user.status;
+    return matchesSearch && (
+      (statusFilter === 'active' && isActive) ||
+      (statusFilter === 'inactive' && !isActive)
+    );
+  });
+
+  const getRoleColor = (role) => {
+    switch (role.toLowerCase()) {
+      case 'admin':
+        return 'text-purple-600 bg-purple-50';
+      case 'author':
+        return 'text-blue-600 bg-blue-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
+    }
+  };
+
+  const getStatusColor = (status) => {
+    return status === 'inactive' 
+      ? 'text-red-600 bg-red-50' 
+      : 'text-green-600 bg-green-50';
+  };
 
   return (
-    <div className="container mx-auto p-6">
-      {/* Search and Register Section */}
-      <div className="flex items-center justify-between mb-6">
-        <Input
-          placeholder="Search by username or email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-1/2"
-        />
-        <Button variant="createBtn" onClick={handleCreate}>Register</Button>
+    <div className="container mx-auto p-6 ">
+      {/* Search and Filter Section */}
+      <div className="flex items-center gap-4 justify-between mb-6 bg-white p-4 rounded-lg shadow ">
+  
+          <div className="relative flex-1">
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Search by username or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[140px]">
+              <FiFilter className="mr-2" />
+              <SelectValue placeholder="Filter Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Users</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+        <Button 
+          variant="createBtn" 
+          onClick={handleCreate}
+          className="flex items-center w-[140px] h-full gap-2 bg-blue-600 hover:bg-blue-700 text-white  md:w-auto"
+        >
+          <FiUserPlus /> Register
+        </Button>
+       
       </div>
 
-      {/* User List as Cards */}
-      <div className="grid grid-cols-1  gap-6">
-        {filteredUsers.length === 0 ? (
-          <p>No users found</p>
-        ) : (
-          filteredUsers.map((user, index) => (
-            <div key={index} className="relative border p-4 rounded-md shadow">
-            {/* Edit Button Positioned at Top Right */}
-            <div className="absolute top-2 right-4">
-              <Button variant="createBtn" size="sm" onClick={() => handleEdit(index)}>
-                Edit
-              </Button>
+      {/* Desktop User List */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
+        <div className="min-w-full">
+          <div className="bg-gray-50 border-b border-gray-200">
+            <div className="grid grid-cols-5 gap-4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <div className="col-span-2">User Info</div>
+              <div>Role</div>
+              <div>Status</div>
+              <div>Actions</div>
             </div>
-          
-            {/* User Details */}
-            <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Full Name:</strong> {user.firstName + " " + user.lastName}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Role:</strong> {user.role}</p>
           </div>
-          
-          ))
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-200 min-h-screen">
+              {filteredUsers.length === 0 ? (
+                <div className="px-6 py-4 text-center text-gray-500">No users found</div>
+              ) : (
+                filteredUsers.map((user, index) => (
+                  <div key={index} className="grid grid-cols-5 gap-4 px-6 py-4 items-center hover:bg-gray-50">
+                    <div className="col-span-2 flex items-center">
+                      <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                        <FiUserPlus className="text-blue-500" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900 flex items-center">
+                          <FiUserCheck className="mr-1 text-gray-400" /> {user.username}
+                        </div>
+                        <div className="flex items-center text-xs text-gray-500">
+                          <FiMail className="mr-1 text-gray-400" /> {user.email}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-sm">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleColor(user.role)}`}>
+                        <FiUserCheck className="mr-1" />
+                        {user.role}
+                      </span>
+                    </div>
+                    <div className="text-sm">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(user.status)}`}>
+                        {user.status || 'active'}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <button onClick={() => handleViewDetails(user)} title="View">
+                        <FiEye className="text-blue-500" />
+                      </button>
+                      <button onClick={() => handleEdit(index)} title="Edit">
+                        <FiEdit className="text-green-500" />
+                      </button>
+                      <button onClick={() => handleDelete(user)} title="Delete">
+                        <FiTrash className="text-red-500" />
+                      </button>
+                     
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile User List */}
+      <div className="block md:hidden">
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <Spinner />
+          </div>
+        ) : (
+          filteredUsers.length === 0 ? (
+            <div className="px-4 py-3 text-center text-gray-500">No users found</div>
+          ) : (
+            filteredUsers.map((user, index) => (
+              <div key={index} className="flex items-center justify-between px-4 py-3 border-b hover:bg-gray-50">
+                <div className="flex items-center">
+                  <div className="h-10 w-10 rounded-full  flex items-center justify-center mr-2">
+                    <FiUserPlus className="text-blue-500" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-500 flex items-center">
+                      <FiUserCheck className="mr-1 text-gray-400" /> {user.username}
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <FiMail className="mr-1 text-gray-400" /> {user.email}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button onClick={() => handleViewDetails(user)} title="View">
+                    <FiEye className="text-blue-500" />
+                  </button>
+                  <button onClick={() => handleEdit(index)} title="Edit">
+                    <FiEdit className="text-green-500" />
+                  </button>
+                  <button onClick={() => handleDelete(user)} title="Delete">
+                    <FiTrash className="text-red-500" />
+                  </button>
+                  
+                </div>
+              </div>
+            ))
+          )
         )}
       </div>
+
+      {/* View Details Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="space-y-4  overflow-y-auto">
+              <div className="flex items-center space-x-4 p-4  rounded-lg">
+                <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center">
+                  <FiUserPlus className="h-8 w-8 text-gray-400" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">{selectedUser.username}</h3>
+                  <p className="text-gray-500">{selectedUser.email}</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-500">First Name</Label>
+                  <p className="text-gray-900">{selectedUser.firstName}</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-500">Last Name</Label>
+                  <p className="text-gray-900">{selectedUser.lastName}</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-500">Role</Label>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleColor(selectedUser.role)}`}>
+                    <FiUserCheck className="mr-1" />
+                    {selectedUser.role}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-500">Status</Label>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(selectedUser.status)}`}>
+                    {selectedUser.status || 'active'}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-500">Bio</Label>
+                <div className=" p-4 rounded-lg">
+                  <p className="text-gray-900 whitespace-pre-wrap  overflow-y-auto" >
+                    {selectedUser.bio}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Register User Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -276,4 +475,3 @@ const UsersList = () => {
 };
 
 export default UsersList;
-
