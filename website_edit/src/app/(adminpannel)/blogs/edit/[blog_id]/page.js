@@ -1,5 +1,3 @@
-
-
 'use client'
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Select from "react-select";
 
 const CreateBlog = () => {
   const dispatch = useDispatch();
@@ -35,7 +34,7 @@ const CreateBlog = () => {
     if (!formData.title) newErrors.title = "Title is required";
     if (!formData.description.trim()) newErrors.description = "Description cannot be empty";
     if (!formData.categories) newErrors.categories = "A category must be selected";
-    if (!formData.tags) newErrors.tags = "A tag must be selected";
+    if (!formData.tags.length) newErrors.tags = "At least one tag must be selected";
     if (!formData.images) newErrors.images = "An image is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -43,6 +42,10 @@ const CreateBlog = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleTagsChange = (selectedTags) => {
+    setFormData({ ...formData, tags: selectedTags.map(tag => tag.value) });
   };
 
   const handleSubmit = (e) => {
@@ -88,16 +91,12 @@ const CreateBlog = () => {
           </div>
           <div>
             <Label>Tags:</Label>
-            <Select name="tags" onValueChange={(value) => setFormData({ ...formData, tags: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a tag" />
-              </SelectTrigger>
-              <SelectContent>
-                {tag.data?.map((t) => (
-                  <SelectItem key={t.name} value={t.name}>{t.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              isMulti
+              options={tag.data?.map((t) => ({ value: t.name, label: t.name }))}
+              value={formData.tags.map(tag => ({ value: tag, label: tag }))}
+              onChange={handleTagsChange}
+            />
             {errors.tags && <p className="text-red-500 text-sm">{errors.tags}</p>}
           </div>
           <div>

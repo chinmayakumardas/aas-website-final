@@ -56,8 +56,9 @@ const UsersList = () => {
     dispatch(registerUser(formData))
       .then(() => {
         toast.success("User registered successfully!");
-        setFormData({ username: '', email: '', role: '', password: '', firstName: '', lastName: '', bio: '' }); // Clear form after registration
+        setFormData({ username: '', email: '', role: '', password: '', firstName: '', lastName: '', bio: '' }); 
         setIsDialogOpen(false);
+        dispatch(getAllUsers()); 
       })
       .catch((err) => {
         toast.error("Error registering user!");
@@ -97,6 +98,7 @@ const UsersList = () => {
         setFormData({  role: '', firstName: '',email:'', lastName: '',username:'', bio: '' }); // Clear form after update
         setIsEditDialogOpen(false);
         setEditIndex(null);
+        dispatch(getAllUsers()); 
       })
       .catch((err) => {
         toast.error("Error updating user. Please try again.");

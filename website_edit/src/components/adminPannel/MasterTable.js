@@ -17,6 +17,7 @@ import {
   editMasterItem,
   removeMasterItem,
 } from '@/redux/slices/masterSlice';
+import Spinner from '@/components/ui/spinner';
 
 const Master = () => {
   const dispatch = useDispatch();
@@ -49,17 +50,16 @@ const Master = () => {
 
   const handleSave = async () => {
     if (!selectedItem?.name?.trim()) return toast.error('Please enter a name');
-    
-    
+  
     try {
-      // console.log(1111111);
       await dispatch(editMasterItem({ type: activeTab, uniqueId: selectedItem.uniqueId, name: selectedItem.name })).unwrap();
       toast.success('Updated successfully!');
-      setDialogs(false)
       closeDialog('view');
+      
+      // Fetch updated data
+      dispatch(fetchDataByType({ type: activeTab }));  
     } catch (error) {
-      // console.log(2222222);
-      toast.error(error?.message || 'Update failed!');
+      toast.error('Update failed!');
     }
   };
 
@@ -69,20 +69,27 @@ const Master = () => {
       toast.success('Deleted successfully!');
       setDialogs(false)
       closeDialog('delete');
+      
+      // Fetch updated data
+      dispatch(fetchDataByType({ type: activeTab }));  
     } catch (error) {
-      toast.error(error?.message || 'Delete failed!');
+      toast.error('Delete failed!');
     }
   };
 
   const handleCreate = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) return toast.error('Please enter a name');
+    
     try {
       await dispatch(addMasterItem({ type: activeTab, name: formData.name })).unwrap();
       toast.success('Created successfully!');
       closeDialog('create');
+      
+      // Fetch updated data
+      dispatch(fetchDataByType({ type: activeTab }));  
     } catch (error) {
-      toast.error(error?.message || 'Create failed!');
+      toast.error('Create failed!');
     }
   };
 
@@ -103,9 +110,7 @@ const Master = () => {
 
       {loading ? (
         <p className="text-center text-gray-500">Loading...</p>
-      ) : error ? (
-        <p className="text-center text-red-500">Error: {error}</p>
-      ) : (
+      )  : (
         <div className="flex flex-wrap gap-4">
           {activeData.length > 0 ? (
             activeData.map((item) => (

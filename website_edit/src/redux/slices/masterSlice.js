@@ -1,9 +1,4 @@
 
-
-
-
-
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchDataApi, fetchDataByTypeApi, createItemApi, updateItemApi, deleteItemApi } from '@/api/masterApi';
 

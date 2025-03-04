@@ -3,7 +3,7 @@ import axiosInstance from "@/utils/axiosInstance";
 // Create a new blog
 export const createBlogApi = async (blogData) => {
   try {
-    const response = await axiosInstance.post("/blogs", blogData);
+    const response = await axiosInstance.post("/create", blogData);
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : "Failed to create blog");
@@ -13,7 +13,7 @@ export const createBlogApi = async (blogData) => {
 // Update a blog
 export const updateBlogApi = async (blogId, blogData) => {
   try {
-    const response = await axiosInstance.put(`/blogs/${blogId}`, blogData);
+    const response = await axiosInstance.put(`/update-blog/${blogId}`, blogData);
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : "Failed to update blog");
@@ -43,7 +43,7 @@ export const getBlogByIdApi = async (blogId) => {
 // Delete a blog (soft delete)
 export const deleteBlogApi = async (blogId) => {
   try {
-    const response = await axiosInstance.put(`/blogs/delete/${blogId}`);
+    const response = await axiosInstance.put(`/deleteblog/${blogId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : "Failed to delete blog");
@@ -51,9 +51,9 @@ export const deleteBlogApi = async (blogId) => {
 };
 
 // Get blogs by status
-export const getBlogsByStatusApi = async (status) => {
+export const getBlogsByStatusApi = async (blogId) => {
   try {
-    const response = await axiosInstance.get(`/blogs/status?status=${status}`);
+    const response = await axiosInstance.patch(`/statusupdate/${blogId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : "Failed to fetch blogs by status");
