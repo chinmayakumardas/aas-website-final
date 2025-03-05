@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createBlog } from "@/redux/slices/blogSlice";
+import { updateBlog, fetchBlogById } from "@/redux/slices/blogSlice";
 import { fetchDataByType } from "@/redux/slices/masterSlice";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 
-const CreateBlog = () => {
+const EditBlog = ({ params }) => {
+  const blogId = React.use(params).blogId;
   const router = useRouter();
   const dispatch = useDispatch();
   const { blogCategory, tag, loading } = useSelector((state) => state.master);
@@ -30,9 +31,28 @@ const CreateBlog = () => {
   const [editorContent, setEditorContent] = useState("");
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const blogData = await dispatch(fetchBlogById(blogId)).unwrap();
+        setFormData({
+          authorname: blogData.authorname || "",
+          title: blogData.title || "",
+          description: blogData.description || "",
+          category: blogData.category || "",
+          tags: blogData.tags || [],
+          status: blogData.status || "Pending",
+          images: null,
+        });
+        setEditorContent(blogData.description || "");
+      } catch (error) {
+        toast.error("Failed to fetch blog data");
+      }
+    };
+
     dispatch(fetchDataByType({ type: "blogCategory" }));
     dispatch(fetchDataByType({ type: "tag" }));
-  }, [dispatch]);
+    fetchData();
+  }, [dispatch, blogId]);
 
   const validateForm = () => {
     let newErrors = {};
@@ -41,7 +61,7 @@ const CreateBlog = () => {
     if (!formData.description.trim()) newErrors.description = "Description cannot be empty";
     if (!formData.category) newErrors.category = "A category must be selected";
     if (!formData.tags.length) newErrors.tags = "At least one tag must be selected";
-    if (!formData.images) newErrors.images = "An image is required";
+   // if (!formData.images) newErrors.images = "An image is required";
     
     // Clear error when field is valid
     Object.keys(errors).forEach(key => {
@@ -87,11 +107,11 @@ const CreateBlog = () => {
       }
   
       try {
-        await dispatch(createBlog(data)).unwrap();
-        toast.success("Blog created successfully!");
+        await dispatch(updateBlog({ blogId: blogId, blogData: data })).unwrap();
+        toast.success("Blog updated successfully!");
         router.push("/blogs");
       } catch (error) {
-        toast.error(error.message || "Failed to create blog");
+        toast.error(error.message || "Failed to update blog");
       }
     } else {
       toast.error("Please fill in all required fields");
@@ -109,7 +129,7 @@ const CreateBlog = () => {
           {/* Header */}
           <div className="p-6 border-b bg-white rounded-t-lg">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-semibold text-gray-800">Create New Blog</h2>
+              <h2 className="text-2xl font-semibold text-gray-800">Edit Blog</h2>
               <div className="flex gap-2 w-full sm:w-auto">
                 <Button
                   type="button"
@@ -124,7 +144,7 @@ const CreateBlog = () => {
                   className="flex-1 sm:flex-none bg-blue-600 text-white hover:bg-blue-700 text-sm" 
                   disabled={loading}
                 >
-                  {loading ? 'Creating...' : 'Create Blog'}
+                  {loading ? 'Saving...' : 'Save Changes'}
                 </Button>
               </div>
             </div>
@@ -162,7 +182,7 @@ const CreateBlog = () => {
               </div>
             </div>
 
-            {/* Category and Tags in a grid on larger screens */}
+            {/* Category and Tags in a row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Category */}
               <div>
@@ -174,7 +194,7 @@ const CreateBlog = () => {
                   onChange={(option) => setFormData({ ...formData, category: option.value })}
                   className="mt-1"
                   placeholder="Select a category"
-                  instanceId="category-select"
+                  instanceId="category-select-edit"
                   styles={{
                     menu: (base) => ({
                       ...base,
@@ -215,7 +235,7 @@ const CreateBlog = () => {
                   onChange={handleTagsChange}
                   className="mt-1"
                   placeholder="Select tags"
-                  instanceId="tags-select"
+                  instanceId="tags-select-edit"
                   styles={{
                     menu: (base) => ({
                       ...base,
@@ -316,4 +336,4 @@ const CreateBlog = () => {
   );
 };
 
-export default CreateBlog;
+export default EditBlog;

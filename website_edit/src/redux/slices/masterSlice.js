@@ -60,6 +60,7 @@ const masterSlice = createSlice({
     tag: [],
     serviceCategory: [],
     blogCategory: [],
+    serviceTechnology:[],
     loading: false,
     error: null,
   },

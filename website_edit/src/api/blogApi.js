@@ -12,10 +12,13 @@ export const createBlogApi = async (blogData) => {
 
 // Update a blog
 export const updateBlogApi = async (blogId, blogData) => {
+  console.log('API - Updating blog with ID:', blogId);
+  console.log('API - Blog data:', blogData);
   try {
     const response = await axiosInstance.put(`/update-blog/${blogId}`, blogData);
     return response.data;
   } catch (error) {
+    console.error('API Error:', error);
     throw new Error(error.response ? error.response.data.message : "Failed to update blog");
   }
 };
@@ -43,7 +46,7 @@ export const getBlogByIdApi = async (blogId) => {
 // Delete a blog (soft delete)
 export const deleteBlogApi = async (blogId) => {
   try {
-    const response = await axiosInstance.put(`/deleteblog/${blogId}`);
+    const response = await axiosInstance.delete(`/deleteblog/${blogId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : "Failed to delete blog");
@@ -59,7 +62,13 @@ export const getBlogsByStatusApi = async (blogId) => {
     throw new Error(error.response ? error.response.data.message : "Failed to fetch blogs by status");
   }
 };
-
-
-
-
+// Get blogs by status
+export const imageApi = async (blogId,index) => {
+  try {
+    const response = await axiosInstance.get(`/blogs/${blogId}/downlaod-image/${index}`);
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data.message : "Failed to fetch blogs by status");
+  }
+};

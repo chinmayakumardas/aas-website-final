@@ -5,7 +5,7 @@ import {
   getAllBlogsApi,
   getBlogByIdApi,
   deleteBlogApi,
-  getBlogsByStatusApi,
+  getBlogsByStatusApi,imageApi
 } from "@/api/blogApi";
 
 // Async thunks
@@ -27,23 +27,25 @@ export const createBlog = createAsyncThunk("blogs/create", async (blogData, { re
 
 export const updateBlog = createAsyncThunk("blogs/update", async ({ blogId, blogData }, { rejectWithValue }) => {
   try {
+    console.log('Updating blog with ID:', blogId);
+    console.log('Blog data:', blogData);
     return await updateBlogApi(blogId, blogData);
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
 
-export const fetchBlogById = createAsyncThunk("blogs/fetchById", async (blogId, { rejectWithValue }) => {
+export const fetchBlogById = createAsyncThunk("blogs/fetchById", async (blog_Id, { rejectWithValue }) => {
   try {
-    return await getBlogByIdApi(blogId);
+    return await getBlogByIdApi(blog_Id);
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
 
-export const deleteBlog = createAsyncThunk("blogs/delete", async (blogId, { rejectWithValue }) => {
+export const deleteBlog = createAsyncThunk("blogs/delete", async (blog_Id, { rejectWithValue }) => {
   try {
-    return await deleteBlogApi(blogId);
+    return await deleteBlogApi(blog_Id);
   } catch (error) {
     return rejectWithValue(error.message);
   }
@@ -56,12 +58,21 @@ export const fetchBlogsByStatus = createAsyncThunk("blogs/fetchByStatus", async 
     return rejectWithValue(error.message);
   }
 });
+export const fetchImageById = createAsyncThunk("blogs/fetchImageById", async ({blogId,index}, { rejectWithValue }) => {
+  try {
+   
+    return await imageApi(blogId,index);
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
 
 // Slice
 const blogSlice = createSlice({
   name: "blogs",
   initialState: {
     blogs: [],
+    image:null,
     blog: null,
     loading: false,
     error: null,
@@ -85,15 +96,20 @@ const blogSlice = createSlice({
       })
       .addCase(updateBlog.fulfilled, (state, action) => {
         state.blogs = state.blogs.map((blog) =>
-          blog._id === action.payload._id ? action.payload : blog
+          blog.blogId === action.payload.blogId ? action.payload : blog
         );
       })
       .addCase(fetchBlogById.fulfilled, (state, action) => {
         state.blog = action.payload;
       })
       .addCase(deleteBlog.fulfilled, (state, action) => {
-        state.blogs = state.blogs.filter((blog) => blog._id !== action.payload._id);
+        state.blogs = state.blogs.filter((blog) => blog.blog_Id !== action.payload.blog_Id);
       })
+      .addCase(fetchImageById.fulfilled, (state, action) => {
+        state.image = action.payload;
+        console.log("Fetched image URL:", action.payload);
+      })
+      
       .addCase(fetchBlogsByStatus.fulfilled, (state, action) => {
         state.blogs = action.payload;
       });

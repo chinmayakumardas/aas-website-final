@@ -86,10 +86,10 @@ const ServicesList = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && ["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+    if (file && ["image/jpeg", "image/png", "image/jpg","image/webp"].includes(file.type)) {
       setFormData({ ...formData, images: file });
     } else {
-      alert("Only image files (JPG, JPEG, PNG) are allowed.");
+      toast.error("Only image files (JPG, JPEG, PNG,webp) are allowed.");
       e.target.value = "";
     }
   };
@@ -155,7 +155,7 @@ const ServicesList = () => {
     setDeleteConfirmOpen(false);
   };
 
-  // <Spinner/>
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-4">
@@ -165,7 +165,7 @@ const ServicesList = () => {
 
   
       {loading ? (
-  <div className="flex items-center justify-center">
+  <div className="flex items-center justify-center h-full">
     <Spinner />
   </div>
 ) : (
@@ -183,8 +183,8 @@ const ServicesList = () => {
               <CardContent>
                 {/* <p><strong>Title:</strong> {service.title}</p> */}
                 <p><strong>Category:</strong> {service.category}</p>
-                <p><strong>Description:</strong> {service.description.length > 200 ? service.description.substring(0, 200) + "..." : service.description}</p>
-                {/* <p><strong>Description:</strong> {service.description}</p> */}
+                {/* <p><strong>Description:</strong> {service.description.length > 200 ? service.description.substring(0, 200) + "..." : service.description}</p> */}
+                <p><strong>Description:</strong> {service.description}</p>
 
                 
                   <img

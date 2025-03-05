@@ -15,10 +15,11 @@ import {
 } from '@/redux/slices/masterSlice';
 import Spinner from '@/components/ui/spinner';
 import { FiPlus, FiEdit2, FiTrash2, FiTag, FiGrid, FiBookOpen, FiX, FiSave, FiAlertCircle, FiPackage } from 'react-icons/fi';
+import { GrTechnology } from "react-icons/gr";
 
 const Master = () => {
   const dispatch = useDispatch();
-  const { tag, serviceCategory, blogCategory, loading, error } = useSelector((state) => state.master);
+  const { tag, serviceCategory, blogCategory,serviceTechnology, loading, error } = useSelector((state) => state.master);
 
   const [activeTab, setActiveTab] = useState('tag');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -31,7 +32,8 @@ const Master = () => {
   const tabIcons = {
     tag: <FiTag className="w-4 h-4 sm:mr-2" />,
     serviceCategory: <FiGrid className="w-4 h-4 sm:mr-2" />,
-    blogCategory: <FiBookOpen className="w-4 h-4 sm:mr-2" />
+    blogCategory: <FiBookOpen className="w-4 h-4 sm:mr-2" />,
+    serviceTechnology: <GrTechnology className="w-4 h-4 sm:mr-2" />
   };
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const Master = () => {
       });
   }, [dispatch, activeTab]);
 
-  const activeData = { tag, serviceCategory, blogCategory }[activeTab]?.data || [];
+  const activeData = { tag, serviceCategory, blogCategory,serviceTechnology }[activeTab]?.data || [];
   
   const openDialog = (type, item = null) => {
     setDialogs((prev) => ({ ...prev, [type]: true }));
@@ -104,8 +106,8 @@ const Master = () => {
   return (
     <div className={`container mx-auto p-4  min-h-screen transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       <div className="flex items-center justify-between mb-4 bg-white rounded-lg shadow p-3">
-        <div className="flex items-center gap-2 flex-1">
-          {['tag', 'serviceCategory', 'blogCategory'].map((tab, index) => (
+        <div className="flex items-center gap-1 flex-1">
+          {['tag', 'serviceCategory', 'blogCategory','serviceTechnology'].map((tab, index) => (
             <Button 
               key={tab} 
               variant={activeTab === tab ? 'default' : 'outline'} 
