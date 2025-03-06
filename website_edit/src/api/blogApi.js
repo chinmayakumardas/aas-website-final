@@ -65,9 +65,13 @@ export const getBlogsByStatusApi = async (blogId) => {
 // Get blogs by status
 export const imageApi = async (blogId,index) => {
   try {
-    const response = await axiosInstance.get(`/blogs/${blogId}/downlaod-image/${index}`);
-    console.log(response.data)
-    return response.data;
+    const response = await axiosInstance.get(`/blogs/${blogId}/download-image/${index}`, {
+      responseType: 'blob',
+    });
+    const imageUrl = URL.createObjectURL(response.data);
+    return imageUrl;
+    
+    
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : "Failed to fetch blogs by status");
   }

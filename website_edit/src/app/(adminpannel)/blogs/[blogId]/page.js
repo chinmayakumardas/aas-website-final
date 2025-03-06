@@ -18,10 +18,7 @@ export default function BlogPost() {
   const { blog, loading } = useSelector((state) => state.blogs);
   const [isLoading, setIsLoading] = useState(true);
   const image = useSelector((state) => state.blogs.image);
-  // useEffect(() => {
-    //   setIsLoading(true);
-    //   dispatch(fetchBlogById(blog_id)).finally(() => setIsLoading(false));
-    // }, [dispatch]);
+
     
     useEffect(() => {
       setIsLoading(true);
@@ -83,8 +80,8 @@ export default function BlogPost() {
       </div>
 
       <Card id="blogContent" className="bg-white shadow-xl rounded-xl overflow-hidden">
-        {/* {blog.images?.[0] ? (
-          <div className="relative w-full h-[400px]">
+        {blog.images?.[0] ? (
+          <div className="relative w-full ">
             <img
               src={image}
           
@@ -99,14 +96,8 @@ export default function BlogPost() {
               }}
             />
           </div>
-        ) : null} */}
-        {image ? (
-  <img src={image} alt="Blog featured image" className="w-full h-full object-cover" />
-) : (
-  <div className="w-full h-[400px] flex items-center justify-center bg-gray-200">
-    No Image Available
-  </div>
-)}
+        ) : null}
+
 
         <div className="p-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-6">{blog.title}</h1>

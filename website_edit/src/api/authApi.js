@@ -5,10 +5,10 @@ import axiosInstance from '@/utils/axiosInstance';
 export const registerApi = async (username, email, password, role,firstName,lastName,bio) => {
   try {
     const response = await axiosInstance.post('/register', { username, email, password, role,firstName,lastName,bio });
-    console.log('Register API Response:', response);
+
     return response.data;
   } catch (error) {
-    console.error('Register API Error:', error.message);
+
     throw new Error(error.response ? error.response.data.message : 'Registration failed');
   }
 };
@@ -38,23 +38,7 @@ export const sendOtpApi = async (email) => {
   }
 };
 
-// Verify OTP API call
-// export const verifyOtpApi = async (email, otp) => {
-//   try {
-//     const response = await axiosInstance.post('/verify-otp', { email, otp });
-//     console.log('Verify OTP API Response:', response);
-//     localStorage.setItem('token', response.data.token);
-//     localStorage.setItem('email', response.data.email);
-//     localStorage.setItem('refreshToken', response.data.refreshToken);
-//     localStorage.setItem('role', response.data.role);
 
-    
-//     return { message: response.data.message, token: response.data.token, refreshToken: response.data.refreshToken, role: response.data.role, email: response.data.email };
-//   } catch (error) {
-//     console.error('Verify OTP API Error:', error.message);
-//     throw new Error(error.response ? error.response.data.message : 'Invalid OTP');
-//   }
-// };
 
 export const verifyOtpApi = async (email, otp) => {
   try {
@@ -153,6 +137,17 @@ export const getUserDataApi = async (email) => {
     return response.data; // Ensure users are fetched correctly
   } catch (error) {
     //console.error('Get user details API Error:', error.message);
+    throw new Error(error.response ? error.response.data.message : 'Failed to fetch user details');
+  }
+};
+// Get  delete API call
+export const deleteUserApi = async (email) => {
+  try {
+ const response = await axiosInstance.delete(`/deleteuser/${email}`);
+    
+    return response; // Ensure users are fetched correctly
+  } catch (error) {
+
     throw new Error(error.response ? error.response.data.message : 'Failed to fetch user details');
   }
 };

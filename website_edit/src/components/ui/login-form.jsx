@@ -14,8 +14,8 @@ import { Eye, EyeOff } from "lucide-react";
  
 export function LoginForm({ className, ...props }) {
   const [step, setStep] = useState("login");
-  const [email, setEmail] = useState('chinmayakumardas2000@gmail.com');
-  const [password, setPassword] = useState('Chin@2025');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -64,7 +64,7 @@ export function LoginForm({ className, ...props }) {
       // localStorage.setItem('token', token);
       toast.success('Login successfully');
       
-      router.push('/dashboard');
+      router.push('/blogs');
     } catch (error) {
       setErrorMessage(error.message);
       toast.error(error.message);

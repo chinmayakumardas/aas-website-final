@@ -8,7 +8,7 @@ import {
   verifyOtpApi,
   resetPasswordApi,
   editProfileApi,
-  getAllUsersApi,getUserDataApi
+  getAllUsersApi,getUserDataApi,deleteUserApi
 } from '@/api/authApi';  // Import your API calls
  
 // Async Thunks for API Calls
@@ -106,6 +106,18 @@ export const editProfile = createAsyncThunk(
       const userData = await getUserDataApi(email);
       //console.log(userData)
       return userData; // Return the array of users directly
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+ export const deleteUser = createAsyncThunk(
+  'auth/deleteUser',
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await deleteUserApi(email);
+     
+      return response; // 
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -239,6 +251,21 @@ const authSlice = createSlice({
         //state.message = 'Profile updated successfully';
       })
       .addCase(editProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+ 
+      // Edit Profile
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

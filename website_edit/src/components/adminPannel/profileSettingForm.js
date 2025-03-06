@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from 'react-toastify';
 import Spinner from '@/components/ui/spinner';
-
+import gsap from "gsap";
 const EditProfile = () => {
   const dispatch = useDispatch();
   const { userDetails, error } = useSelector((state) => state.auth);
@@ -23,16 +23,17 @@ const EditProfile = () => {
     bio: '',
     role: '',
   });
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (email) {
-      dispatch(getUserDetails(email)).finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+    setIsLoading(true);
+    dispatch(getUserDetails(email))
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+      });
   }, [dispatch, email]);
-
   useEffect(() => {
     if (userDetails) {
       setFormData({
@@ -61,7 +62,7 @@ const EditProfile = () => {
 
   return (
     <div className="min-h-[calc(100vh-120px)]">
-      {loading ? (
+      {isLoading ? (
         <div className="flex items-center justify-center h-full">
           <Spinner />
         </div>

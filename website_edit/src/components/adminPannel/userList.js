@@ -6,14 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers, registerUser, editProfile } from '@/redux/slices/authSlice'; 
+import { getAllUsers, registerUser, editProfile,deleteUser } from '@/redux/slices/authSlice'; 
 import { toast } from 'react-toastify';
 import { FiEye, FiEyeOff, FiEdit, FiUserPlus, FiMail, FiUserCheck, FiFilter, FiSearch, FiTrash } from 'react-icons/fi';
 import  Spinner  from "@/components/ui/spinner";
 
 const UsersList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('active');
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -29,15 +29,22 @@ const UsersList = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false); // Edit modal state
   const [editIndex, setEditIndex] = useState(null); // Index to track which user is being edited
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-
+ const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   
   // Fetching users from Redux store
   const { users, status, loading, error } = useSelector((state) => state.auth);
 
-  // Fetch all users when the component mounts
+
+
   useEffect(() => {
-    dispatch(getAllUsers());
+    setIsLoading(true);
+    dispatch(getAllUsers())
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+      });
   }, [dispatch]);
 
   const handleChange = (e) => {
@@ -117,9 +124,17 @@ const UsersList = () => {
     setIsViewDialogOpen(true);
   };
 
-  const handleDelete = (user) => {
-    toast.info('Delete function not implemented yet.');
+  const handleDelete = (email) => {
+    dispatch(deleteUser(email))
+      .then(() => {
+        toast.success('User Deleted!');
+        dispatch(getAllUsers()); // Refresh list
+      })
+      .catch(() => {
+        toast.error('Error deleting user.');
+      });
   };
+  
 
  
 
@@ -200,7 +215,7 @@ const UsersList = () => {
               <div>Actions</div>
             </div>
           </div>
-          {loading ? (
+          {isLoading ? (
             <div className="flex items-center justify-center h-64">
               <Spinner />
             </div>
@@ -242,7 +257,7 @@ const UsersList = () => {
                       <button onClick={() => handleEdit(index)} title="Edit">
                         <FiEdit className="text-green-500" />
                       </button>
-                      <button onClick={() => handleDelete(user)} title="Delete">
+                      <button onClick={() => handleDelete(email)} title="Delete">
                         <FiTrash className="text-red-500" />
                       </button>
                      
@@ -258,7 +273,7 @@ const UsersList = () => {
       {/* Mobile User List */}
       <div className="block md:hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-64">
+          <div className="flex items-center justify-center h-screen">
             <Spinner />
           </div>
         ) : (
@@ -287,7 +302,7 @@ const UsersList = () => {
                   <button onClick={() => handleEdit(index)} title="Edit">
                     <FiEdit className="text-green-500" />
                   </button>
-                  <button onClick={() => handleDelete(user)} title="Delete">
+                  <button onClick={() => handleDelete(user.email)} title="Delete">
                     <FiTrash className="text-red-500" />
                   </button>
                   
