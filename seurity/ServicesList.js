@@ -325,17 +325,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Selects from "react-select";
+
 import Spinner from '@/components/ui/spinner';
 import gsap from 'gsap';
 const ServicesList = () => {
   const dispatch = useDispatch();
   const { services, status, error, imageUrls } = useSelector((state) => state.service);
-  const {serviceCategory,serviceTechnology}=useSelector((state)=>state.master);
+  const {serviceCategory,TechnologyWeUse}=useSelector((state)=>state.master);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState(null);
-  const [errors, setErrors] = useState({});
+  
   const contentRef = useRef(null);const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     serviceId: null,
@@ -350,12 +350,8 @@ const ServicesList = () => {
     OurProcess:[]
 
   });
-  formData.TechnologyWeUse.forEach(TechnologyWeUse => data.append("TechnologyWeUse", TechnologyWeUse));
   useEffect(() => {
     dispatch(fetchDataByType({ type: 'serviceCategory' }));
-  }, [dispatch]);
-  useEffect(() => {
-    dispatch(fetchDataByType({ type: 'serviceTechnology' }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -447,9 +443,7 @@ const ServicesList = () => {
       toast.error("All fields are required!");
     }
   };
-  const handleTechChange = (selectedOptions) => {
-    setFormData({ ...formData, TechnologyWeUse: selectedOptions.map(option => option.value) });
-  };
+
   const handleDeleteClick = (serviceId) => {
     setServiceToDelete(serviceId);
     setDeleteConfirmOpen(true);
@@ -481,49 +475,49 @@ const ServicesList = () => {
 
   
       {loading ? (
-          <div className="flex items-center justify-center h-full">
-            <Spinner />
-          </div>
-        ) : (
-          <div ref={contentRef} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {services.map((service, index) => {
-                  const imageKey = `${service.serviceId}-0`;
-                  const imageUrl = imageUrls[imageKey];
-                  const uniqueKey = service.serviceId ? String(service.serviceId) : `service-${index}`;
+  <div className="flex items-center justify-center h-full">
+    <Spinner />
+  </div>
+) : (
+  <div ref={contentRef} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+     {services.map((service, index) => {
+          const imageKey = `${service.serviceId}-0`;
+          const imageUrl = imageUrls[imageKey];
+          const uniqueKey = service.serviceId ? String(service.serviceId) : `service-${index}`;
 
-                  return (
-                    <Card key={uniqueKey}>
-                      <CardHeader>
-                        <CardTitle>{service.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        {/* <p><strong>Title:</strong> {service.title}</p> */}
-                        <p><strong>Category:</strong> {service.category}</p>
-                        {/* <p><strong>Description:</strong> {service.description.length > 200 ? service.description.substring(0, 200) + "..." : service.description}</p> */}
-                        <p><strong>Description:</strong> {service.description}</p>
+          return (
+            <Card key={uniqueKey}>
+              <CardHeader>
+                <CardTitle>{service.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* <p><strong>Title:</strong> {service.title}</p> */}
+                <p><strong>Category:</strong> {service.category}</p>
+                {/* <p><strong>Description:</strong> {service.description.length > 200 ? service.description.substring(0, 200) + "..." : service.description}</p> */}
+                <p><strong>Description:</strong> {service.description}</p>
 
-                        
-                          <img
-                            src={imageUrl}
-                            alt={service.name}
-                            className="mt-2 w-full h-32 object-cover rounded"
-                            onError={(e) => {
-                              e.target.src = "/fallback-image.jpg";
-                              console.error(`Failed to load image for service ${service.serviceId}: ${imageUrl}`, e);
-                            }}
-                          />
-                      
+                
+                  <img
+                    src={imageUrl}
+                    alt={service.name}
+                    className="mt-2 w-full h-32 object-cover rounded"
+                    onError={(e) => {
+                      e.target.src = "/fallback-image.jpg";
+                      console.error(`Failed to load image for service ${service.serviceId}: ${imageUrl}`, e);
+                    }}
+                  />
+               
 
-                        <div className="flex mt-4 space-x-2">
-                          <Button variant="createBtn" size="sm" onClick={() => openModal(service)}>Edit</Button>
-                          <Button variant="deleteBtn" size="sm" onClick={() => handleDeleteClick(service.serviceId)}>Delete</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-          </div>
-        )}
+                <div className="flex mt-4 space-x-2">
+                  <Button variant="createBtn" size="sm" onClick={() => openModal(service)}>Edit</Button>
+                  <Button variant="deleteBtn" size="sm" onClick={() => handleDeleteClick(service.serviceId)}>Delete</Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+  </div>
+)}
 
       <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
         <DialogContent>
@@ -568,95 +562,20 @@ const ServicesList = () => {
                 </SelectContent>
               </Select>
             </div>
-             
-            {/* tehnology we used */}
 
-            <div>
-                <Label className="text-sm font-medium text-gray-700">TechnologyWeUse</Label>
-                <Selects
-                  isMulti
-                  options={serviceTechnology.data?.map((t) => ({ value: t.name, label: t.name }))}
-                  value={formData.TechnologyWeUse.map(TechnologyWeUse => ({ value: TechnologyWeUse, label: TechnologyWeUse }))}
-                  onChange={handleTechChange}
-                  className="mt-1"
-                  placeholder="Select tags"
-                  instanceId="tags-select"
-                  styles={{
-                    menu: (base) => ({
-                      ...base,
-                      zIndex: 50,
-                      backgroundColor: 'white',
-                      border: '1px solid #E5E7EB',
-                      borderRadius: '0.375rem',
-                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
-                    }),
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: 'white',
-                      borderColor: '#E5E7EB',
-                      '&:hover': {
-                        borderColor: '#D1D5DB'
-                      }
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      backgroundColor: state.isFocused ? '#F3F4F6' : 'white',
-                      color: '#374151',
-                      '&:active': {
-                        backgroundColor: '#F3F4F6'
-                      }
-                    }),
-                    multiValue: (base) => ({
-                      ...base,
-                      backgroundColor: '#F3F4F6',
-                      borderRadius: '0.25rem'
-                    })
-                  }}
-                />
-                {errors.serviceTechnology && <p className="text-red-500 text-xs mt-1">{errors.serviceTechnology}</p>}
-              </div>
-
+            
            {/* description */}
            <div>
            <Label>Description</Label>
             <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Service Description" />
 
            </div>
-           
-           {/* our process */}
-           <div>
-           <Label>Our Process</Label>
-           <Textarea 
-            value={(formData.OurProcess || []).join(",")} 
-            onChange={(e) => setFormData({ 
-              ...formData, 
-              OurProcess: e.target.value.split(",").map(item => item.trim()) 
-            })} 
-          />
-          {/* KeyFeatures */}
-          <div>
-             <Label>KeyFeatures</Label>
-           <Textarea 
-            value={(formData.KeyFeatures || []).join(",")} 
-            onChange={(e) => setFormData({ 
-              ...formData, 
-              KeyFeatures: e.target.value.split(",").map(item => item.trim()) 
-            })} 
-          />
-          </div>
 
-          </div>
            {/* attachment */}
-           <div className='flex justify-between gap-4'>
-                <div>
-                  <Label>Upload Image</Label>
-                  <Input type="file" accept="image/*" onChange={handleFileChange} />
-                  </div>
-                  <div>
-                  <Label>Choose Icon</Label>
-                  <Input type="file" accept="image/*" onChange={handleFileChange} />
-                  </div>
-           </div>
+            <div>
+            <Label>Upload Image</Label>
+            <Input type="file" accept="image/*" onChange={handleFileChange} />
+            </div>
           </div>
           {/* button */}
           <div className="flex justify-end space-x-2">
@@ -687,5 +606,4 @@ const ServicesList = () => {
 };
 
 export default ServicesList;
-
 

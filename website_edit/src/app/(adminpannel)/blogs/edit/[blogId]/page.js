@@ -279,6 +279,7 @@ const EditBlog = ({ params }) => {
                 <RichTextEditor 
                   content={editorContent} 
                   onChange={handleEditorChange}
+                  key={editorContent}
                 />
               </div>
               {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}

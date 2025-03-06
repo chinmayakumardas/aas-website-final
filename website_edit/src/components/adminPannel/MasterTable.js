@@ -105,12 +105,12 @@ const Master = () => {
 
   return (
     <div className={`container mx-auto p-4  min-h-screen transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <div className="flex items-center justify-between mb-4 bg-white rounded-lg shadow p-3">
-        <div className="flex items-center gap-1 flex-1">
+      <div className="flex items-center justify-around mb-4 bg-white rounded-lg shadow p-3 ">
+        <div className="flex items-center  flex-1">
           {['tag', 'serviceCategory', 'blogCategory','serviceTechnology'].map((tab, index) => (
             <Button 
               key={tab} 
-              variant={activeTab === tab ? 'default' : 'outline'} 
+              variant={activeTab === tab ? 'Btn' : 'outline'} 
               onClick={() => setActiveTab(tab)} 
               disabled={loading}
               style={{
@@ -133,9 +133,10 @@ const Master = () => {
         </div>
         <Button 
           onClick={() => openDialog('create')}
+          variant="Btn"
           className="
             bg-blue-500 hover:bg-blue-600
-            text-white flex items-center justify-center gap-2 ml-2
+            text-white flex items-center justify-center gap-2 
             rounded-lg h-10 px-4 shadow-sm
             transition-all duration-300
             ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}

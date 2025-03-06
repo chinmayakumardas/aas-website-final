@@ -75,7 +75,7 @@ const EditProfile = () => {
                 <Button 
                   type="button" 
                   onClick={() => setIsEditing(!isEditing)} 
-                  variant={isEditing ? "destructive" : "default"}
+                  variant="Btn"
                   size="sm"
                   className="transition-all duration-300"
                 >

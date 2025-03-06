@@ -23,6 +23,8 @@ const buttonVariants = cva(
           "bg-blue-400  text-primary-foreground shadow hover:bg-blue-400",
       cancelBtn:
           "bg-blue-400  text-primary-foreground shadow hover:bg-blue-400",
+      Btn:
+          "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white transition-all duration-300 transform hover:scale-[1.02]",
       ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
