@@ -1,7 +1,8 @@
 
 
 'use client';
-import { useState } from 'react';
+import Cookies from "js-cookie";
+import { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,9 +22,13 @@ export function LoginForm({ className, ...props }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
- 
+   const role = Cookies.get('role');
   const router = useRouter();
-
+  useEffect(() => {
+    if(role)
+        router.push("/blogs");
+    
+    }, [role,router]);
  
   // Validation Regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,6 +75,7 @@ export function LoginForm({ className, ...props }) {
       toast.error(error.message);
     }
   };
+  
  
   // Handle Forgot Password
   const handleResetPassword = async () => {
