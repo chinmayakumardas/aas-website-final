@@ -19,15 +19,15 @@ import Cookies from "js-cookie";
 const navData = {
   admin: [
  
-    { title: "Blog", url: "/blogs", icon: Edit },
-    { title: "Services", url: "/all-services", icon: Briefcase, isActive: true  },
+    { title: "Blog", url: "/blogs", icon: Edit,isActive: true  },
+    { title: "Services", url: "/all-services", icon: Briefcase },
     { title: "User", url: "/users", icon: Users },
     { title: "Master", url: "/master", icon: ServerCog  },
     { title: "Settings", url: "/settings/profile", icon: Settings2 },
   ],
   author: [
     
-    { title: "Blog", url: "/blogs", icon: Edit },
+    { title: "Blog", url: "/blogs", icon: Edit,isActive: true  },
     { title: "Settings", url: "/settings/profile", icon: Settings2 },
   ],
 };

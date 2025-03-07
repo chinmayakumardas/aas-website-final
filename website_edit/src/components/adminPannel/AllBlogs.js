@@ -87,7 +87,7 @@ const AllBlogs = () => {
       </div>
 
       {loading ? (
-        <div className="fixed inset-0 m-auto flex items-center justify-center">
+        <div className="flex items-center justify-center h-[100vh]">
           <Spinner />
         </div>
       ) : (

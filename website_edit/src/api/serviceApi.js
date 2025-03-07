@@ -24,29 +24,65 @@ export const getServiceByIdApi = async (serviceId) => {
 // Create a new service
 export const createServiceApi = async (formData) => {
   try {
+    // Log the FormData contents for debugging
+   
+    for (let pair of formData.entries()) {
+      const value = pair[0] === 'images' || pair[0] === 'serviceIcon' 
+        ? '[File]' 
+        : pair[1];
+      //console.log(`${pair[0]}: ${value}`);
+    }
+
     const response = await axiosInstance.post('/createService', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
    
+  
+    
     return response.data;
   } catch (error) {
-    throw new Error(error.response ? error.response.data.error : 'Failed to create service');
+    
+
+    const errorMessage = error.response?.data?.error 
+      || (typeof error.response?.data === 'string' ? error.response.data : null)
+      || error.message 
+      || 'Failed to create service';
+
+    throw new Error(errorMessage);
   }
 };
 
 // Update a service
 export const updateServiceApi = async (serviceId, formData) => {
   try {
+
+    for (let pair of formData.entries()) {
+      const value = pair[0] === 'images' || pair[0] === 'serviceIcon' 
+        ? '[File]' 
+        : pair[1];
+      //console.log(`${pair[0]}: ${value}`);
+    }
+
     const response = await axiosInstance.put(`/updateservice/${serviceId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
+
+ 
+
     return response.data;
   } catch (error) {
-    throw new Error(error.response ? error.response.data.error : 'Failed to update service');
+  
+
+    const errorMessage = error.response?.data?.error 
+      || (typeof error.response?.data === 'string' ? error.response.data : null)
+      || error.message 
+      || 'Failed to update service';
+
+    throw new Error(errorMessage);
   }
 };
 

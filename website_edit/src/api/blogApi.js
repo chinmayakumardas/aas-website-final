@@ -12,13 +12,12 @@ export const createBlogApi = async (blogData) => {
 
 // Update a blog
 export const updateBlogApi = async (blogId, blogData) => {
-  console.log('API - Updating blog with ID:', blogId);
-  console.log('API - Blog data:', blogData);
+ 
   try {
     const response = await axiosInstance.put(`/update-blog/${blogId}`, blogData);
     return response.data;
   } catch (error) {
-    console.error('API Error:', error);
+
     throw new Error(error.response ? error.response.data.message : "Failed to update blog");
   }
 };

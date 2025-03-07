@@ -17,11 +17,10 @@ export const registerApi = async (username, email, password, role,firstName,last
 export const loginApi = async (email, password) => {
   try {
     const response = await axiosInstance.post('/login', { email, password });
-    console.log('Login API Response:', response);
-    //return { token: response.data.token, role: response.data.role };
+    
     return response;
   } catch (error) {
-    console.error('Login API Error:', error.message);
+      
     throw new Error(error.response ? error.response.data.message : 'Login failed');
   }
 };
@@ -30,10 +29,10 @@ export const loginApi = async (email, password) => {
 export const sendOtpApi = async (email) => {
   try {
     const response = await axiosInstance.post('/forgot-password', { email });
-    console.log('Send OTP API Response:', response);
+ 
     return response.data.message;
   } catch (error) {
-    console.error('Send OTP API Error:', error.message);
+  
     throw new Error(error.response ? error.response.data.message : 'Failed to send OTP');
   }
 };
@@ -43,7 +42,7 @@ export const sendOtpApi = async (email) => {
 export const verifyOtpApi = async (email, otp) => {
   try {
     const response = await axiosInstance.post("/verify-otp", { email, otp });
-    console.log("Verify OTP API Response:", response);
+
 
     // Store authentication details in cookies
     Cookies.set("token", response.data.token, {
@@ -82,7 +81,7 @@ export const verifyOtpApi = async (email, otp) => {
       email: response.data.email,
     };
   } catch (error) {
-    console.error("Verify OTP API Error:", error.message);
+ 
     throw new Error(error.response ? error.response.data.message : "Invalid OTP");
   }
 };
@@ -91,10 +90,10 @@ export const verifyOtpApi = async (email, otp) => {
 export const resetPasswordApi = async (email, otp, newPassword) => {
   try {
     const response = await axiosInstance.post('/reset-password', { email, otp, newPassword });
-    console.log('Reset Password API Response:', response);
+   
     return response.data.message;
   } catch (error) {
-    console.error('Reset Password API Error:', error.message);
+ 
     throw new Error(error.response ? error.response.data.message : 'Failed to reset password');
   }
 };
@@ -110,10 +109,10 @@ export const editProfileApi = async (firstName, lastName,email, bio, role) => {
       { firstName, lastName, bio,email, role }
     );
 
-    console.log('Edit Profile API Response:', response);
+
     return response.data;
   } catch (error) {
-    console.error('Edit Profile API Error:', error.message);
+  
     throw new Error(error.response ? error.response.data.message : 'Failed to update profile');
   }
 };
@@ -122,10 +121,10 @@ export const editProfileApi = async (firstName, lastName,email, bio, role) => {
 export const getAllUsersApi = async () => {
   try {
     const response = await axiosInstance.get('/users');
-    //console.log('Get All Users API Response:', response);
+  
     return response.data || []; // Ensure users are fetched correctly
   } catch (error) {
-    console.error('Get All Users API Error:', error.message);
+
     throw new Error(error.response ? error.response.data.message : 'Failed to fetch users');
   }
 };
@@ -133,10 +132,10 @@ export const getAllUsersApi = async () => {
 export const getUserDataApi = async (email) => {
   try {
  const response = await axiosInstance.get(`/userdetails/${email}`);
-    //console.log('Get user details API Response:', response);
+
     return response.data; // Ensure users are fetched correctly
   } catch (error) {
-    //console.error('Get user details API Error:', error.message);
+   
     throw new Error(error.response ? error.response.data.message : 'Failed to fetch user details');
   }
 };

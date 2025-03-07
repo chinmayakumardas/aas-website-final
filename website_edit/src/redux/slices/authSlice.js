@@ -92,7 +92,7 @@ export const editProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const users = await getAllUsersApi();
-      //console.log(users)
+     
       return users; // Return the array of users directly
     } catch (error) {
       return rejectWithValue(error.message);
@@ -104,7 +104,7 @@ export const editProfile = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const userData = await getUserDataApi(email);
-      //console.log(userData)
+   
       return userData; // Return the array of users directly
     } catch (error) {
       return rejectWithValue(error.message);

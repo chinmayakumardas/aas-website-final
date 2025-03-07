@@ -91,7 +91,7 @@ const Master = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim()) return toast.error('Please enter a name');
+    if (!formData.name.trim()) return toast.error('Please enter a name!');
     
     try {
       await dispatch(addMasterItem({ type: activeTab, name: formData.name })).unwrap();
@@ -127,7 +127,7 @@ const Master = () => {
               `}
             >
               {tabIcons[tab]}
-              <span className="hidden md:inline ml-2">{tab.replace(/([A-Z])/g, ' $1').trim()}</span>
+              <span className="hidden md:inline ">{tab.replace(/([A-Z])/g, ' $1').trim()}</span>
             </Button>
           ))}
         </div>

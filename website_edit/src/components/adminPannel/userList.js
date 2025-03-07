@@ -183,26 +183,30 @@ const UsersList = () => {
               className="pl-10"
             />
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px]">
-              <FiFilter className="mr-2" />
-              <SelectValue placeholder="Filter Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Users</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
-        <Button 
-          variant="createBtn" 
-          onClick={handleCreate}
-          className="flex items-center w-[140px] h-full gap-2 bg-blue-600 hover:bg-blue-700 text-white  md:w-auto"
-        >
-          <FiUserPlus /> Register
-        </Button>
+         <div className='flex -mt-3 gap-4 '>
+            <Select className="" value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[140px]">
+                  <FiFilter className="mr-0" />
+                  <SelectValue placeholder="Filter Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Users</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            <Button 
+              variant="createBtn" 
+              onClick={handleCreate}
+              className=" flex items-center  h-full gap-2 bg-blue-600 hover:bg-blue-700 text-white  md:w-auto"
+            >
+              <FiUserPlus /> Register
+            </Button>
+         </div>
        
       </div>
+
+   
 
       {/* Desktop User List */}
       <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
@@ -216,7 +220,7 @@ const UsersList = () => {
             </div>
           </div>
           {isLoading ? (
-            <div className="flex items-center justify-center h-64">
+            <div className="flex items-center justify-center h-[100vh]">
               <Spinner />
             </div>
           ) : (

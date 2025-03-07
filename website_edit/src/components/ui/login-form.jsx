@@ -23,7 +23,7 @@ export function LoginForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
  
   const router = useRouter();
-  //const token = localStorage.getItem('token');
+
  
   // Validation Regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,7 +47,7 @@ export function LoginForm({ className, ...props }) {
       setStep("otp");
       toast.success('OTP sent to your email');
     } catch (error) {
-      setErrorMessage(error.message);
+      //setErrorMessage(error.message);
       toast.error(error.message);
     }
   };
@@ -66,7 +66,7 @@ export function LoginForm({ className, ...props }) {
       
       router.push('/blogs');
     } catch (error) {
-      setErrorMessage(error.message);
+      //setErrorMessage(error.message);
       toast.error(error.message);
     }
   };
@@ -83,7 +83,7 @@ export function LoginForm({ className, ...props }) {
       setStep("new-password");
       toast.success('OTP sent to your email');
     } catch (error) {
-      setErrorMessage(error.message);
+      //setErrorMessage(error.message);
       toast.error(error.message);
     }
   };
@@ -108,7 +108,7 @@ export function LoginForm({ className, ...props }) {
       toast.success('Password reset successful');
       setStep("login");
     } catch (error) {
-      setErrorMessage(error.message);
+      //setErrorMessage(error.message);
       toast.error(error.message);
     }
   };
@@ -156,7 +156,7 @@ export function LoginForm({ className, ...props }) {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="user@aasit.com"
+                    placeholder="admin@aasit.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -173,6 +173,7 @@ export function LoginForm({ className, ...props }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    placeholder="Enter Password!"
                     className="h-12 text-xl pr-10"
                   />
                   <div className="text-right">
@@ -195,14 +196,6 @@ export function LoginForm({ className, ...props }) {
             </form>
           )}
  
-          {/* {step === "otp" && (
-            <div className="grid gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="otp">Enter OTP</Label>
-                <Input id="otp" type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Enter 6 digit OTP" required />
-              </div>
-              <Button type="button" onClick={handleOtpValidate} className="w-full">Validate OTP</Button>
-            </div> */}
             {step === "otp" && (
               <div className="flex flex-col items-center gap-10">
               <Label htmlFor="otp" className="text-lg text-gray-600">
@@ -233,7 +226,7 @@ export function LoginForm({ className, ...props }) {
             <div className="grid gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="reset-email" className="text-lg">Enter your email</Label>
-                <Input  className="h-12 text-lg pr-10 placeholder:text-lg" id="reset-email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Input  className="h-12 text-lg pr-10 placeholder:text-lg" id="reset-email" type="email" placeholder="info@aasint.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
               <Button type="button" onClick={handleResetPassword} className="w-full">Reset Password</Button>
             </div>
@@ -253,6 +246,7 @@ export function LoginForm({ className, ...props }) {
                 <Label htmlFor="confirm-password">Confirm Password</Label>
                 <Input id="confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               </div>
+              
               <Button type="button" onClick={handleSubmitNewPassword} className="w-full">Submit</Button>
             </div>
           )}

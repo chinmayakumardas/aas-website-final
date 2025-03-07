@@ -1,7 +1,3 @@
-
-
-
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   getAllServicesApi,
@@ -34,15 +30,18 @@ export const fetchServiceById = createAsyncThunk('services/fetchById', async (se
 
 export const createService = createAsyncThunk('services/create', async (serviceData, { rejectWithValue }) => {
   try {
-    const formData = new FormData();
-    formData.append('name', serviceData.name);
-    formData.append('title', serviceData.title);
-    formData.append('category', serviceData.category);
-    formData.append('description', serviceData.description);
-    if (serviceData.images) {
-      formData.append('images', serviceData.images);
+    // Log FormData contents for debugging
+    
+    for (let [key, value] of serviceData.entries()) {
+      if (key === 'images' || key === 'serviceIcon') {
+        //console.log(`${key}: [File]`);
+      } else {
+        //console.log(`${key}: ${value}`);
+      }
     }
-    return await createServiceApi(formData);
+
+    const response = await createServiceApi(serviceData);
+    return response;
   } catch (error) {
     return rejectWithValue(error.message);
   }
@@ -50,15 +49,18 @@ export const createService = createAsyncThunk('services/create', async (serviceD
 
 export const updateService = createAsyncThunk('services/update', async ({ serviceId, updatedData }, { rejectWithValue }) => {
   try {
-    const formData = new FormData();
-    formData.append('name', updatedData.name);
-    formData.append('title', updatedData.title);
-    formData.append('category', updatedData.category);
-    formData.append('description', updatedData.description);
-    if (updatedData.images) {
-      formData.append('images', updatedData.images);
+    // Log FormData contents for debugging
+
+    for (let [key, value] of updatedData.entries()) {
+      if (key === 'images' || key === 'serviceIcon') {
+        //console.log(`${key}: [File]`);
+      } else {
+        ///console.log(`${key}: ${value}`);
+      }
     }
-    return await updateServiceApi(serviceId, formData);
+
+    const response = await updateServiceApi(serviceId, updatedData);
+    return response;
   } catch (error) {
     return rejectWithValue(error.message);
   }
@@ -93,7 +95,7 @@ export const downloadServiceImage = createAsyncThunk(
       const imageUrl = URL.createObjectURL(blob);
       return { serviceId, imageIndex, imageUrl };
     } catch (error) {
-      console.error("Image download error details:", error);
+    
       return rejectWithValue(error.message || 'Failed to download image');
     }
   }
@@ -141,7 +143,7 @@ const serviceSlice = createSlice({
           ).values()
         );
         state.services = uniqueServices;
-        //console.log("Filtered unique services:", uniqueServices);
+       
       })
       .addCase(fetchServices.rejected, (state, action) => {
         state.status = 'failed';
@@ -153,11 +155,11 @@ const serviceSlice = createSlice({
       .addCase(createService.fulfilled, (state, action) => {
         const newService = action.payload;
         if (!newService.serviceId) {
-          //console.warn("New service created without serviceId, assigning temporary ID");
+         
           newService.serviceId = `temp-${state.services.length + 1}`;
         }
         state.services.push(newService);
-        //console.log("New service added:", newService);
+
       })
       .addCase(updateService.fulfilled, (state, action) => {
         state.services = state.services.map((service) =>
@@ -180,12 +182,12 @@ const serviceSlice = createSlice({
         state.status = 'succeeded';
         const { serviceId, imageIndex, imageUrl } = action.payload;
         state.imageUrls[`${serviceId}-${imageIndex}`] = imageUrl;
-        //console.log("Image URL added to state:", { serviceId, imageIndex, imageUrl });
+        
       })
       .addCase(downloadServiceImage.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-        //console.warn("Image download failed, but operation continues:", action.payload);
+ 
       })
       .addCase(fetchCategories.pending, (state) => {
         state.categoriesStatus = 'loading';
@@ -193,7 +195,7 @@ const serviceSlice = createSlice({
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.categoriesStatus = 'succeeded';
         state.categories = action.payload;
-        //console.log("Categories fetched:", action.payload);
+       
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.categoriesStatus = 'failed';

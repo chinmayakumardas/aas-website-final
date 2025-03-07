@@ -85,7 +85,7 @@ const masterSlice = createSlice({
       .addCase(fetchDataByType.fulfilled, (state, action) => {
         state.loading = false;
         state[action.payload.type] = action.payload.data || [];
-        //state[action.payload.type] = Array.isArray(action.payload.data) ? action.payload.data : [];
+       
       })
       .addCase(fetchDataByType.rejected, (state, action) => {
         state.loading = false;
@@ -96,7 +96,7 @@ const masterSlice = createSlice({
       })
       .addCase(addMasterItem.fulfilled, (state, action) => {
         state.loading = false;
-        //state[action.payload.type] = [...state[action.payload.type], action.payload.item];
+       
         state[action.payload.type] = [
           ...(Array.isArray(state[action.payload.type]) ? state[action.payload.type] : []),
           action.payload.item,
@@ -138,7 +138,7 @@ const masterSlice = createSlice({
         state[action.payload.type] = (Array.isArray(state[action.payload.type]) ? state[action.payload.type] : []).filter(
           (item) => item.uniqueId !== action.payload.uniqueId
         );
-        //state[action.payload.type] = state[action.payload.type].filter((item) => item.uniqueId !== action.payload.uniqueId);
+        
       })
       .addCase(removeMasterItem.rejected, (state, action) => {
         state.loading = false;

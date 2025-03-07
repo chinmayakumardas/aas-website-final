@@ -61,13 +61,13 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-120px)]">
+    <div className="w-full">
       {isLoading ? (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-[100vh]">
           <Spinner />
         </div>
       ) : (
-        <Card className="h-full w-full bg-white/50 backdrop-blur-sm shadow-lg rounded-xl border border-gray-100">
+        <Card className="h-[100vh] w-full bg-white/50 backdrop-blur-sm shadow-lg rounded-xl border border-gray-100">
           <div className="p-4 md:p-6 h-full">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold text-gray-800">Profile Settings</h2>
@@ -94,11 +94,7 @@ const EditProfile = () => {
               </div>
             </div>
 
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
-                <p className="text-sm">{error}</p>
-              </div>
-            )}
+           
 
             <form id="profile-form" onSubmit={handleSubmit} className="h-full">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

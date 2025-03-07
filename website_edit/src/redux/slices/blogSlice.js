@@ -27,8 +27,7 @@ export const createBlog = createAsyncThunk("blogs/create", async (blogData, { re
 
 export const updateBlog = createAsyncThunk("blogs/update", async ({ blogId, blogData }, { rejectWithValue }) => {
   try {
-    console.log('Updating blog with ID:', blogId);
-    console.log('Blog data:', blogData);
+   
     return await updateBlogApi(blogId, blogData);
   } catch (error) {
     return rejectWithValue(error.message);
@@ -107,7 +106,7 @@ const blogSlice = createSlice({
       })
       .addCase(fetchImageById.fulfilled, (state, action) => {
         state.image = action.payload;
-        console.log("Fetched image URL:", action.payload);
+       
       })
       
       .addCase(fetchBlogsByStatus.fulfilled, (state, action) => {

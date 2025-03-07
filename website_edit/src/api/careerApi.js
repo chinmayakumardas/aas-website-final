@@ -1,10 +1,5 @@
-import axios from "axios";
 
-// Create an Axios instance for API calls
-const axiosInstance = axios.create({
-  baseURL: "http://192.168.0.133:8080/api",  // Replace with your actual API base URL
-});
-
+import axiosInstance from "@/utils/axiosInstance";
 // Function to fetch the job list
 export const fetchJobList = async () => {
   try {

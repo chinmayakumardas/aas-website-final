@@ -26,7 +26,7 @@ export default function BlogPost() {
     dispatch(fetchImageById({blogId:blogId,index:0})); // Fetch the image
   }, [dispatch, blogId]);
 
-  console.log("Image state:", image);
+  
 
   useEffect(() => {
     if (!isLoading) {
@@ -40,7 +40,7 @@ export default function BlogPost() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75">
+      <div className="flex items-center justify-center h-[100vh]">
         <Spinner />
       </div>
     );

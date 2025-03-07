@@ -1,11 +1,4 @@
-// src/redux/slices/contactApi.js
-
-import axios from 'axios';
-
-// Create an Axios instance for API calls
-const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.136:5000/api', // Replace with your actual API base URL
-});
+import axiosInstance from "@/utils/axiosInstance";
 
 // API request to create a contact
 export const createContactApi = async (contactData) => {
