@@ -1,0 +1,14 @@
+/* globals.css */
+@font-face {
+    font-family: 'Helvetica';
+    src: url('/helvetica/helvetica.woff2') format('woff2'),
+         url('/helvetica/helvetica.woff') format('woff'),
+         url('/helvetica/helvetica.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Apply Helvetica globally */
+body {
+    font-family: 'Helvetica', Arial, sans-serif;
+}
