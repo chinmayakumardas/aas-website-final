@@ -30,7 +30,7 @@ export function SiteHeader() {
           <Separator orientation="vertical" className="h-6" />
           
           {/* Breadcrumb */}
-          <Breadcrumb>
+          <Breadcrumb className="hidden sm:block">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink href="#">Home</BreadcrumbLink>

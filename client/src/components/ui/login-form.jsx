@@ -39,7 +39,7 @@ export function LoginForm({ className, ...props }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!emailRegex.test(email)) {
-      toast.error("Invalid email format");
+      toast.error("Enter valid Credentials!");
       return;
     }
     if (!passwordRegex.test(password)) {
@@ -50,7 +50,7 @@ export function LoginForm({ className, ...props }) {
     try {
       const { token } = await loginApi(email, password);
       setStep("otp");
-      toast.success('OTP sent to your email');
+      toast.success('OTP sent!');
     } catch (error) {
       //setErrorMessage(error.message);
       toast.error(error.message);
@@ -67,7 +67,7 @@ export function LoginForm({ className, ...props }) {
     try {
       await verifyOtpApi(email, otp);
       // localStorage.setItem('token', token);
-      toast.success('Login successfully');
+      toast.success('Login successfully!');
       
       router.push('/blogs');
     } catch (error) {
@@ -80,14 +80,14 @@ export function LoginForm({ className, ...props }) {
   // Handle Forgot Password
   const handleResetPassword = async () => {
     if (!emailRegex.test(email)) {
-      toast.error("Invalid email format");
+      toast.error("Invalid email!");
       return;
     }
  
     try {
       await sendOtpApi(email);
       setStep("new-password");
-      toast.success('OTP sent to your email');
+      toast.success('OTP sent!');
     } catch (error) {
       //setErrorMessage(error.message);
       toast.error(error.message);
@@ -97,7 +97,7 @@ export function LoginForm({ className, ...props }) {
   // Handle New Password Submission
   const handleSubmitNewPassword = async () => {
     if (!otpRegex.test(otp)) {
-      toast.error("OTP must be a 6-digit number");
+      toast.error("OTP must be a 6-digit number!");
       return;
     }
     if (!passwordRegex.test(newPassword)) {
@@ -105,13 +105,13 @@ export function LoginForm({ className, ...props }) {
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error('Passwords Mismatch!');
       return;
     }
  
     try {
       await resetPasswordApi(email, otp, newPassword);
-      toast.success('Password reset successful');
+      toast.success('Password changed!');
       setStep("login");
     } catch (error) {
       //setErrorMessage(error.message);
@@ -146,7 +146,7 @@ export function LoginForm({ className, ...props }) {
  
  
   return (
-    <div className={cn("flex flex-col gap-4", className)} {...props}>
+    <div className={cn("flex flex-col gap-4 min-h-[400px]", className)} {...props}>
       <Card>
         <CardHeader className="text-center mb-4">
           <CardTitle className="text-3xl">
@@ -180,7 +180,7 @@ export function LoginForm({ className, ...props }) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="Enter Password!"
-                    className="h-12 text-xl pr-10"
+                    className="h-12 text-lg placeholder:text-lg"
                   />
                   <div className="text-right">
                     <a href="#" className="text-md underline text-black hover:text-black" onClick={() => setStep("reset")}>
@@ -192,12 +192,12 @@ export function LoginForm({ className, ...props }) {
                     className="absolute right-4 top-12 transform -translate-y-1/2 text-gray-600"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    {showPassword ? <Eye size={25} /> : <EyeOff size={25} />}
                   </button>
                 </div>
  
                 {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-                <Button type="submit" className="w-full">Login</Button>
+                <Button variant="createBtn" type="submit" className="w-full">Login</Button>
               </div>
             </form>
           )}
@@ -205,7 +205,7 @@ export function LoginForm({ className, ...props }) {
             {step === "otp" && (
               <div className="flex flex-col items-center gap-10">
               <Label htmlFor="otp" className="text-lg text-gray-600">
-                      OTP is sent to registered email
+                      OTP is sent to Registered Email
               </Label>
                 <div className="flex space-x-2">
                   {Array(6).fill("").map((_, index) => (
@@ -222,7 +222,8 @@ export function LoginForm({ className, ...props }) {
                     />
                   ))}
                 </div>
-                <Button type="button" onClick={handleOtpValidate} className="w-full mt-4">Validate OTP</Button>
+                <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button>
+                <Button variant="createBtn" type="button" onClick={handleOtpValidate} className="w-full mt-4">Validate OTP</Button>
               </div>
             )}
            
@@ -232,9 +233,10 @@ export function LoginForm({ className, ...props }) {
             <div className="grid gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="reset-email" className="text-lg">Enter your email</Label>
-                <Input  className="h-12 text-lg pr-10 placeholder:text-lg" id="reset-email" type="email" placeholder="info@aasint.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Input  className="h-12 text-lg pr-10 placeholder:text-lg" id="reset-email" type="email" placeholder="admin@aasit.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
-              <Button type="button" onClick={handleResetPassword} className="w-full">Reset Password</Button>
+              <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button>
+              <Button variant="createBtn" type="button" onClick={handleResetPassword} className="w-full">Reset Password</Button>
             </div>
           )}
  
@@ -242,7 +244,22 @@ export function LoginForm({ className, ...props }) {
             <div className="grid gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="otp">Enter OTP</Label>
-                <Input id="otp" type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required />
+                {/* <Input id="otp" type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required /> */}
+                <div className="flex space-x-2 md:space-x-5">
+                  {Array(6).fill("").map((_, index) => (
+                    <input
+                      key={index}
+                      id={`otp-${index}`}
+                      type="text"
+                      maxLength="1"
+                      value={otp[index] || ""}
+                      onChange={(e) => handleOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                      onPaste={handlePaste}
+                      className="w-12 h-12 border-b-2 border-gray-700 text-center text-2xl focus:outline-none focus:border-gray-900 transition-all"
+                    />
+                  ))}
+                </div>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="new-password">New Password</Label>
@@ -252,8 +269,8 @@ export function LoginForm({ className, ...props }) {
                 <Label htmlFor="confirm-password">Confirm Password</Label>
                 <Input id="confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               </div>
-              
-              <Button type="button" onClick={handleSubmitNewPassword} className="w-full">Submit</Button>
+              <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button>
+              <Button variant="createBtn" type="button" onClick={handleSubmitNewPassword} className="w-full">Submit</Button>
             </div>
           )}
         </CardContent>
