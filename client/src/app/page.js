@@ -1,19 +1,3 @@
-// import { LoginForm } from "@/components/ui/login-form"
-
-
-// export default function HomePage() {
-//   return (
-//   (<div
-//       className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-//       <div className="flex w-full max-w-sm flex-col gap-6">
-     
-//         <LoginForm />
-//       </div>
-//     </div>)
-    
-  
-//   );
-// }
 
 
 
@@ -28,7 +12,7 @@ export default function Home() {
         {/* Image Section (Hidden on small screens) */}
         <div className="hidden md:flex justify-center items-center min-h-[400px]">
           <Image
-            src="/home.jpg"
+            src="/image.png"
             alt="Welcome Image"
             width={500}
             height={400}

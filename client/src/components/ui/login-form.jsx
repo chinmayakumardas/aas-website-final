@@ -146,9 +146,9 @@ export function LoginForm({ className, ...props }) {
  
  
   return (
-    <div className={cn("flex flex-col gap-4 min-h-[400px]", className)} {...props}>
-      <Card>
-        <CardHeader className="text-center mb-4">
+    <div className={cn("flex flex-col gap-4 ", className)} {...props}>
+      <Card className="h-[45vh]   flex flex-col justify-around ">
+        <CardHeader className="text-center ">
           <CardTitle className="text-3xl">
             {step === "login" ? "Welcome Back !" : step === "otp" ? "Enter OTP" : "Reset Password"}
           </CardTitle>
@@ -222,8 +222,14 @@ export function LoginForm({ className, ...props }) {
                     />
                   ))}
                 </div>
-                <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button>
+                <div className="text-right">
+                    <a href="#" className="text-md underline text-black hover:text-black" onClick={() => setStep("login")}>
+                      Back to Login!
+                    </a>
+                  </div>
+                  
                 <Button variant="createBtn" type="button" onClick={handleOtpValidate} className="w-full mt-4">Validate OTP</Button>
+            
               </div>
             )}
            
@@ -235,8 +241,13 @@ export function LoginForm({ className, ...props }) {
                 <Label htmlFor="reset-email" className="text-lg">Enter your email</Label>
                 <Input  className="h-12 text-lg pr-10 placeholder:text-lg" id="reset-email" type="email" placeholder="admin@aasit.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
-              <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button>
+              <div className="text-right">
+                    <a href="#" className="text-md underline text-black hover:text-black" onClick={() => setStep("login")}>
+                      Back to login?
+                    </a>
+              </div>
               <Button variant="createBtn" type="button" onClick={handleResetPassword} className="w-full">Reset Password</Button>
+             
             </div>
           )}
  
@@ -244,8 +255,8 @@ export function LoginForm({ className, ...props }) {
             <div className="grid gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="otp">Enter OTP</Label>
-                {/* <Input id="otp" type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required /> */}
-                <div className="flex space-x-2 md:space-x-5">
+                <Input id="otp" type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required />
+                {/* <div className="flex space-x-2  md:space-x-5">
                   {Array(6).fill("").map((_, index) => (
                     <input
                       key={index}
@@ -259,7 +270,7 @@ export function LoginForm({ className, ...props }) {
                       className="w-12 h-12 border-b-2 border-gray-700 text-center text-2xl focus:outline-none focus:border-gray-900 transition-all"
                     />
                   ))}
-                </div>
+                </div> */}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="new-password">New Password</Label>
@@ -269,7 +280,12 @@ export function LoginForm({ className, ...props }) {
                 <Label htmlFor="confirm-password">Confirm Password</Label>
                 <Input id="confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               </div>
-              <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button>
+              <div className="text-right">
+                    <a href="#" className="text-md underline text-black hover:text-black" onClick={() => setStep("login")}>
+                      Back to login?
+                    </a>
+              </div>
+              {/* <Button variant="ghost" onClick={() => setStep("login")} className="w-full">Back to Login</Button> */}
               <Button variant="createBtn" type="button" onClick={handleSubmitNewPassword} className="w-full">Submit</Button>
             </div>
           )}
