@@ -254,7 +254,7 @@ const ServicesList = () => {
 
 
   return (
-    <div className="container mx-auto p-6">
+    <div className=" p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Manage Services</h1>
         <Button variant="createBtn" onClick={() => openModal()}>+ New Service</Button>

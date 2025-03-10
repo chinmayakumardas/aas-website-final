@@ -69,7 +69,7 @@ export default function BlogPost() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className=" px-4 py-8">
       <div className="mb-8">
         <Link href="/blogs">
           <Button className="bg-blue-600 hover:bg-blue-700 text-white transition-colors flex items-center gap-2">

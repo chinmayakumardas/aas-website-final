@@ -170,7 +170,7 @@ const UsersList = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 ">
+    <div className=" p-6 ">
       {/* Search and Filter Section */}
       <div className="flex items-center gap-4 justify-between mb-6 bg-white p-4 rounded-lg shadow ">
   

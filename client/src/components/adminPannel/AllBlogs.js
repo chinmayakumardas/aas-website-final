@@ -66,7 +66,7 @@ const AllBlogs = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 relative">
+    <div className=" p-4 relative">
       <h1 className="text-2xl font-bold mb-4">All Blogs</h1>
       <div className="flex flex-row justify-between items-center mb-6 gap-4">
         <Input

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'react-toastify';
 import {
   fetchDataByType,
@@ -104,7 +104,7 @@ const Master = () => {
   };
 
   return (
-    <div className={`container mx-auto p-4  min-h-screen transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+    <div className={` p-4  min-h-screen transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       <div className="flex items-center justify-around mb-4 bg-white rounded-lg shadow p-3 ">
         <div className="flex items-center  flex-1">
           {['tag', 'serviceCategory', 'blogCategory','serviceTechnology'].map((tab, index) => (
@@ -198,6 +198,9 @@ const Master = () => {
               {editMode ? <FiEdit2 className="mr-2" /> : tabIcons[activeTab]}
               {editMode ? 'Edit' : 'View'} {activeTab.replace(/([A-Z])/g, ' $1').trim()}
             </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              {editMode ? 'Edit the details below' : 'View the details of the selected item'}
+            </DialogDescription>
           </DialogHeader>
           {editMode ? (
             <>
@@ -252,6 +255,9 @@ const Master = () => {
             <DialogTitle className="flex items-center text-red-600 text-xl">
               <FiAlertCircle className="mr-2" /> Confirm Deletion
             </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Please confirm if you want to delete this item permanently
+            </DialogDescription>
           </DialogHeader>
           <div className="mt-4 p-4 bg-red-50 rounded-lg">
             <p className="text-gray-700">Are you sure you want to delete this item?</p>
@@ -283,6 +289,9 @@ const Master = () => {
             <DialogTitle className="flex items-center text-xl">
               <FiPlus className="mr-2" /> Create {activeTab.replace(/([A-Z])/g, ' $1').trim()}
             </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Enter the details below to create a new {activeTab.replace(/([A-Z])/g, ' $1').trim().toLowerCase()}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreate} className="mt-4">
             <Label>Name</Label>
