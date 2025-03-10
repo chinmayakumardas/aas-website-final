@@ -261,7 +261,7 @@ const UsersList = () => {
                       <button onClick={() => handleEdit(index)} title="Edit">
                         <FiEdit className="text-green-500" />
                       </button>
-                      <button onClick={() => handleDelete(email)} title="Delete">
+                      <button onClick={() => handleDelete(user.email)} title="Delete">
                         <FiTrash className="text-red-500" />
                       </button>
                      
